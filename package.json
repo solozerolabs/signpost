@@ -11,7 +11,12 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "biome check .",
-    "format": "biome format --write ."
+    "format": "biome format --write .",
+    "deploy": "astro build && wrangler deploy",
+    "cf-typegen": "wrangler types"
+  },
+  "overrides": {
+    "sharp": ">=0.35.0"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.0",
@@ -21,7 +26,9 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.0",
+    "@cloudflare/workers-types": "^5",
     "@types/js-yaml": "^4.0.9",
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "wrangler": "^4.40.0"
   }
 }

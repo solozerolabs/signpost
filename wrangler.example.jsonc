@@ -1,0 +1,22 @@
+// Template. Copy to wrangler.jsonc (git-ignored) and fill in your instance:
+//   name, routes[].pattern (your domain), d1_databases[].database_id.
+// Create the D1 db: npx wrangler d1 create <name>  → paste the id below.
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "signpost-INSTANCE",
+	"main": "worker/index.ts",
+	"compatibility_date": "2026-08-01",
+	"compatibility_flags": ["nodejs_compat"],
+	"workers_dev": false,
+	"observability": { "enabled": true },
+	"assets": {
+		"directory": "./dist/",
+		"binding": "ASSETS",
+		"not_found_handling": "404-page",
+		"run_worker_first": ["/api/subscribe"]
+	},
+	"routes": [{ "pattern": "YOURDOMAIN.com", "custom_domain": true }],
+	"d1_databases": [
+		{ "binding": "DB", "database_name": "signpost-subscribers", "database_id": "REPLACE_WITH_D1_ID" }
+	]
+}

@@ -7,3 +7,4 @@ public
 # per-instance config is INJECTED, never committed to the public engine
 /data
 /assets
+wrangler.jsonc
