@@ -1,0 +1,14 @@
+---
+interface Props {
+	title: string;
+	sub?: string;
+	url: string;
+}
+const { title, sub, url } = Astro.props;
+---
+
+<a class="pill" href={url}>
+	<span class="pill-main">{title}</span>
+	{sub && <span class="pill-sub">{sub}</span>}
+	<span class="arrow" aria-hidden="true">↗</span>
+</a>

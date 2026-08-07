@@ -1,0 +1,14 @@
+---
+import { socials } from "../lib/content";
+import BrandIcon from "./BrandIcon.astro";
+---
+
+<nav class="socials" aria-label="Social links">
+	{
+		socials.map((s) => (
+			<a class="soc" href={s.url} aria-label={s.label ?? s.handle ?? s.platform}>
+				<BrandIcon platform={s.platform} />
+			</a>
+		))
+	}
+</nav>

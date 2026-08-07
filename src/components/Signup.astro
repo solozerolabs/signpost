@@ -1,0 +1,12 @@
+---
+// Posts to the signup Worker (/api/subscribe). Static-safe: on a plain static
+// host with no Worker the form still renders; wiring the Worker makes it live.
+const consent = Astro.props.consent ?? "Weekly build log. No spam. Unsubscribe anytime.";
+---
+
+<form class="signup" method="post" action="/api/subscribe">
+	<input type="email" name="email" placeholder="you@email.com" required aria-label="Email" />
+	<input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+	<button type="submit">Join</button>
+</form>
+<p class="consent">{consent}</p>

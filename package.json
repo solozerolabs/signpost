@@ -1,0 +1,27 @@
+{
+  "name": "signpost",
+  "type": "module",
+  "version": "0.1.0",
+  "license": "MIT",
+  "description": "Own, agent-editable, open-source link-in-bio. Static Astro on Cloudflare.",
+  "scripts": {
+    "predev": "node scripts/prebuild.mjs",
+    "dev": "astro dev",
+    "prebuild": "node scripts/prebuild.mjs",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "biome check .",
+    "format": "biome format --write ."
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.0",
+    "astro": "^6.3.0",
+    "js-yaml": "^4.1.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.0",
+    "@types/js-yaml": "^4.0.9",
+    "typescript": "^5.7.0"
+  }
+}

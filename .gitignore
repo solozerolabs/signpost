@@ -1,0 +1,9 @@
+node_modules
+dist
+.astro
+.wrangler
+.dev.vars
+public
+# per-instance config is INJECTED, never committed to the public engine
+/data
+/assets

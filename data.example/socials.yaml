@@ -1,0 +1,4 @@
+- { platform: youtube,   url: "https://youtube.com/@example" }
+- { platform: x,         url: "https://x.com/example" }
+- { platform: github,    url: "https://github.com/example" }
+- { platform: bluesky,   url: "https://bsky.app/profile/example.com" }

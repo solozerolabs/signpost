@@ -1,0 +1,36 @@
+---
+import { aeo, profile, socials, theme } from "../lib/content";
+import "../styles/tokens.css";
+
+const jsonLd = {
+	"@context": "https://schema.org",
+	"@type": "Person",
+	name: profile.name,
+	url: profile.url,
+	description: aeo.description,
+	sameAs: socials.map((s) => s.url),
+};
+const forceScheme = theme.color_scheme === "auto" ? null : theme.color_scheme;
+---
+
+<!doctype html>
+<html lang="en" style={`--accent:${theme.accent}`} data-scheme={forceScheme}>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>{aeo.title}</title>
+		<meta name="description" content={aeo.description} />
+		<link rel="icon" href="/avatar.png" />
+		<link rel="canonical" href={profile.url} />
+		<meta property="og:type" content="profile" />
+		<meta property="og:title" content={aeo.title} />
+		<meta property="og:description" content={aeo.description} />
+		<meta property="og:url" content={profile.url} />
+		<meta property="og:image" content="/og.png" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+	</head>
+	<body>
+		<main class="wrap"><slot /></main>
+	</body>
+</html>

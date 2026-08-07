@@ -1,0 +1,2 @@
+- { title: My App,      sub: "The thing I am building", url: "https://example.com/app" }
+- { title: Newsletter,  sub: "Weekly, in public", url: "https://example.com/news" }

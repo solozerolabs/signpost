@@ -1,0 +1,25 @@
+---
+import LinkPill from "../components/LinkPill.astro";
+import Signup from "../components/Signup.astro";
+import SocialRow from "../components/SocialRow.astro";
+import Base from "../layouts/Base.astro";
+import { products, profile } from "../lib/content";
+---
+
+<Base>
+	<img class="avatar" src={profile.avatar} alt={profile.name} width="96" height="96" />
+	<h1 class="name">{profile.name}</h1>
+	{profile.handle && <div class="handle">{profile.handle}</div>}
+	{profile.role && <div class="role">{profile.role}</div>}
+	{profile.bio && <p class="bio">{profile.bio}</p>}
+
+	<Signup />
+	<SocialRow />
+
+	{products.length > 0 && <div class="label">Building</div>}
+	{products.map((p) => <LinkPill title={p.title} sub={p.sub} url={p.url} />)}
+
+	<footer class="foot">
+		Powered by <a href="https://github.com/solozerolabs/signpost">signpost</a>
+	</footer>
+</Base>
