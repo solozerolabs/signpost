@@ -2,10 +2,17 @@
 // route, POST /api/subscribe, writing to the instance's own Cloudflare D1.
 // Single opt-in. Honeypot before the (durable, fail-open) rate limiter.
 // Response is identical for new / existing / bot — never a membership oracle.
+//
+// A Cron trigger runs mirror(): it batches un-mirrored subscribers and POSTs them
+// (HMAC-signed) to MIRROR_WEBHOOK_URL, then stamps mirrored_at. The destination is
+// instance config — point it at your own ESP / newsletter engine. Unset = disabled,
+// and signups simply accumulate in D1 until you wire one.
 
 interface Env {
 	ASSETS: Fetcher;
 	DB: D1Database;
+	MIRROR_WEBHOOK_URL?: string;
+	MIRROR_SECRET?: string;
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -92,6 +99,49 @@ async function handleSubscribe(request: Request, env: Env): Promise<Response> {
 	return json(200, { ok: true });
 }
 
+async function hmacHex(secret: string, msg: string): Promise<string> {
+	const key = await crypto.subtle.importKey(
+		"raw",
+		new TextEncoder().encode(secret),
+		{ name: "HMAC", hash: "SHA-256" },
+		false,
+		["sign"],
+	);
+	const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(msg));
+	return [...new Uint8Array(sig)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+// Cron: forward un-mirrored subscribers to the configured destination, then stamp
+// them mirrored. Failure leaves rows un-mirrored for the next run (at-least-once).
+async function mirror(env: Env): Promise<void> {
+	if (!env.MIRROR_WEBHOOK_URL) return;
+	const { results } = await env.DB.prepare(
+		`SELECT id, email, utm_source, referrer, created_at FROM subscribers
+		 WHERE mirrored_at IS NULL AND unsubscribed_at IS NULL AND suppressed_at IS NULL
+		 ORDER BY created_at LIMIT 100`,
+	).all<{ id: string; email: string; utm_source: string | null; referrer: string | null; created_at: string }>();
+	if (!results?.length) return;
+
+	const subscribers = results.map((r) => ({
+		email: r.email,
+		source: r.utm_source,
+		referrer: r.referrer,
+		created_at: r.created_at,
+	}));
+	const bodyText = JSON.stringify({ subscribers });
+	const headers: Record<string, string> = { "content-type": "application/json" };
+	if (env.MIRROR_SECRET) {
+		headers["x-signpost-signature"] = `sha256=${await hmacHex(env.MIRROR_SECRET, bodyText)}`;
+	}
+
+	const res = await fetch(env.MIRROR_WEBHOOK_URL, { method: "POST", headers, body: bodyText });
+	if (!res.ok) return; // retry next run
+
+	const now = new Date().toISOString();
+	const stmt = env.DB.prepare("UPDATE subscribers SET mirrored_at = ?1 WHERE id = ?2");
+	await env.DB.batch(results.map((r) => stmt.bind(now, r.id)));
+}
+
 export default {
 	async fetch(request: Request, env: Env): Promise<Response> {
 		const url = new URL(request.url);
@@ -100,5 +150,9 @@ export default {
 			return handleSubscribe(request, env);
 		}
 		return env.ASSETS.fetch(request);
+	},
+
+	async scheduled(_event: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
+		ctx.waitUntil(mirror(env));
 	},
 };

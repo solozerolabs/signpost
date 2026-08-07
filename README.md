@@ -39,6 +39,14 @@ Static build to a single Cloudflare Worker with static-assets + a `/api/subscrib
 (D1-backed). `npm run build` → `wrangler deploy`. Custom domain is auto-provisioned via
 `routes[].custom_domain` in `wrangler.jsonc`.
 
+## Mirror to your newsletter
+
+Signups land in your D1. To flow them into your own newsletter engine / ESP, set
+`MIRROR_WEBHOOK_URL` (a `var`) and a signing secret (`wrangler secret put MIRROR_SECRET`).
+The hourly cron batches new subscribers and POSTs `{ subscribers: [{ email, source,
+referrer, created_at }] }`, HMAC-signed in the `x-signpost-signature` header, then marks
+them mirrored (at-least-once; a failed POST retries next run). Unset = disabled.
+
 ## License
 
 MIT. Brand glyphs adapted from [simple-icons](https://github.com/simple-icons/simple-icons) (CC0).

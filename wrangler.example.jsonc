@@ -1,6 +1,11 @@
 // Template. Copy to wrangler.jsonc (git-ignored) and fill in your instance:
 //   name, routes[].pattern (your domain), d1_databases[].database_id.
 // Create the D1 db: npx wrangler d1 create <name>  → paste the id below.
+//
+// Newsletter mirror (optional): set MIRROR_WEBHOOK_URL to your ESP/webhook and add
+// the signing secret with `wrangler secret put MIRROR_SECRET`. The hourly cron then
+// batches new subscribers and POSTs them (HMAC-signed as `x-signpost-signature`).
+// Leave MIRROR_WEBHOOK_URL empty to disable — signups just accumulate in D1.
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "signpost-INSTANCE",
@@ -18,5 +23,7 @@
 	"routes": [{ "pattern": "YOURDOMAIN.com", "custom_domain": true }],
 	"d1_databases": [
 		{ "binding": "DB", "database_name": "signpost-subscribers", "database_id": "REPLACE_WITH_D1_ID" }
-	]
+	],
+	"triggers": { "crons": ["0 * * * *"] },
+	"vars": { "MIRROR_WEBHOOK_URL": "" }
 }
