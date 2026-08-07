@@ -9,7 +9,14 @@ import { load } from "js-yaml";
 const dir = existsSync("data") ? "data" : "data.example";
 const { url: site } = load(readFileSync(join(dir, "profile.yaml"), "utf8"));
 
+// Static assets (avatar, favicon) are instance-injected into /assets, matching the
+// /data convention; fall back to the committed example so the public engine builds
+// standalone. Without this, publicDir defaults to /public (which never exists here)
+// and /avatar.png ships empty.
+const publicDir = existsSync("assets") ? "assets" : "assets.example";
+
 export default defineConfig({
   site,
+  publicDir,
   integrations: [sitemap()],
 });
