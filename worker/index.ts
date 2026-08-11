@@ -27,6 +27,11 @@ const SHORT_LINKS: Record<string, string> = {
 	x: "twitter",
 	yt: "youtube",
 	gh: "github",
+	dv: "devto",
+	rd: "reddit",
+	ih: "indiehackers",
+	hn: "hackernews",
+	th: "threads",
 };
 
 function shortLinkRedirect(url: URL): Response | null {
