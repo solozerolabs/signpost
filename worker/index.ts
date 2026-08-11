@@ -32,6 +32,7 @@ const SHORT_LINKS: Record<string, string> = {
 	ih: "indiehackers",
 	hn: "hackernews",
 	th: "threads",
+	bs: "bluesky",
 };
 
 function shortLinkRedirect(url: URL): Response | null {
