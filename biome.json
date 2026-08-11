@@ -1,6 +1,6 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.5.0/schema.json",
-  "formatter": { "enabled": true, "indentStyle": "tab", "lineWidth": 100 },
-  "linter": { "enabled": true, "rules": { "recommended": true } },
-  "files": { "includes": ["**", "!dist", "!.astro", "!public"] }
+	"$schema": "https://biomejs.dev/schemas/2.5.0/schema.json",
+	"formatter": { "enabled": true, "indentStyle": "tab", "lineWidth": 100 },
+	"linter": { "enabled": true, "rules": { "recommended": true } },
+	"files": { "includes": ["**", "!dist", "!.astro", "!public"] }
 }

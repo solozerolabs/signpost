@@ -4,7 +4,14 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { load } from "js-yaml";
-import { aeoSchema, productSchema, profileSchema, socialSchema, themeSchema } from "./schema";
+import {
+	aeoSchema,
+	featuredSchema,
+	productSchema,
+	profileSchema,
+	socialSchema,
+	themeSchema,
+} from "./schema";
 
 const ROOT = process.cwd();
 const DATA = existsSync(join(ROOT, "data")) ? "data" : "data.example";
@@ -43,3 +50,7 @@ export const theme = one("theme.yaml", themeSchema);
 export const socials = many("socials.yaml", socialSchema);
 export const products = many("products.yaml", productSchema);
 export const aeo = one("aeo.yaml", aeoSchema);
+// Optional: no featured.yaml -> no hero CTA.
+export const featured = existsSync(join(ROOT, DATA, "featured.yaml"))
+	? one("featured.yaml", featuredSchema)
+	: null;

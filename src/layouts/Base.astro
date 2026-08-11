@@ -2,6 +2,10 @@
 import { aeo, profile, socials, theme } from "../lib/content";
 import "../styles/tokens.css";
 
+// Fallback attribution source for outbound clicks that arrive with no utm_* of
+// their own: this site's own registrable name (gosolozero.com -> "gosolozero").
+const fallbackSource = new URL(profile.url).hostname.replace(/^www\./, "").split(".")[0];
+
 const jsonLd = {
 	"@context": "https://schema.org",
 	"@type": "Person",
@@ -32,5 +36,32 @@ const forceScheme = theme.color_scheme === "auto" ? null : theme.color_scheme;
 	</head>
 	<body>
 		<main class="wrap"><slot /></main>
+		<script is:inline define:vars={{ fallbackSource }}>
+			// UTM pass-through: forward the visit's own utm_* onto every outbound
+			// [data-passthrough] link so the ORIGINAL source (e.g. linkedin) reaches
+			// the destination instead of this hub showing up as the referrer. No
+			// incoming utm_* -> tag the click with this hub as the source.
+			(function () {
+				var KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
+				var incoming = new URLSearchParams(location.search);
+				var carried = KEYS.filter(function (k) {
+					return incoming.get(k);
+				});
+				document.querySelectorAll("a[data-passthrough]").forEach(function (a) {
+					try {
+						var u = new URL(a.href, location.href);
+						if (carried.length) {
+							carried.forEach(function (k) {
+								u.searchParams.set(k, incoming.get(k));
+							});
+						} else {
+							u.searchParams.set("utm_source", fallbackSource);
+							u.searchParams.set("utm_medium", "referral");
+						}
+						a.href = u.toString();
+					} catch (e) {}
+				});
+			})();
+		</script>
 	</body>
 </html>

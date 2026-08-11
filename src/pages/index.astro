@@ -1,4 +1,5 @@
 ---
+import Featured from "../components/Featured.astro";
 import LinkPill from "../components/LinkPill.astro";
 import Signup from "../components/Signup.astro";
 import SocialRow from "../components/SocialRow.astro";
@@ -12,6 +13,8 @@ import { products, profile } from "../lib/content";
 	{profile.handle && <div class="handle">{profile.handle}</div>}
 	{profile.role && <div class="role">{profile.role}</div>}
 	{profile.bio && <p class="bio">{profile.bio}</p>}
+
+	<Featured />
 
 	<Signup />
 	<SocialRow />

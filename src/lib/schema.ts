@@ -32,6 +32,15 @@ export const productSchema = z.object({
 	url: z.string().url(),
 });
 
+// Optional single hero CTA rendered above the fold (data/featured.yaml). Absent
+// file -> no hero, so every existing instance is unaffected.
+export const featuredSchema = z.object({
+	title: z.string(),
+	sub: z.string().optional(),
+	cta: z.string().default("Open"),
+	url: z.string().url(),
+});
+
 export const aeoSchema = z.object({
 	title: z.string(),
 	description: z.string(),
@@ -40,3 +49,4 @@ export const aeoSchema = z.object({
 export type Profile = z.infer<typeof profileSchema>;
 export type Social = z.infer<typeof socialSchema>;
 export type Product = z.infer<typeof productSchema>;
+export type Featured = z.infer<typeof featuredSchema>;

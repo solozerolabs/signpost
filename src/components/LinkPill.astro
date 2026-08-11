@@ -7,7 +7,7 @@ interface Props {
 const { title, sub, url } = Astro.props;
 ---
 
-<a class="pill" href={url}>
+<a class="pill" href={url} data-passthrough>
 	<span class="pill-main">{title}</span>
 	{sub && <span class="pill-sub">{sub}</span>}
 	<span class="arrow" aria-hidden="true">↗</span>

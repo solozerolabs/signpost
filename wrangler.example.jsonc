@@ -22,7 +22,11 @@
 	},
 	"routes": [{ "pattern": "YOURDOMAIN.com", "custom_domain": true }],
 	"d1_databases": [
-		{ "binding": "DB", "database_name": "signpost-subscribers", "database_id": "REPLACE_WITH_D1_ID" }
+		{
+			"binding": "DB",
+			"database_name": "signpost-subscribers",
+			"database_id": "REPLACE_WITH_D1_ID"
+		}
 	],
 	"triggers": { "crons": ["0 * * * *"] },
 	"vars": { "MIRROR_WEBHOOK_URL": "" }

@@ -44,7 +44,9 @@ body {
 	margin: 0 auto;
 	display: block;
 	object-fit: cover;
-	box-shadow: 0 0 0 1px var(--border), 0 8px 30px rgba(0, 0, 0, 0.25);
+	box-shadow:
+		0 0 0 1px var(--border),
+		0 8px 30px rgba(0, 0, 0, 0.25);
 }
 .name {
 	font-size: 1.5rem;
@@ -71,6 +73,43 @@ body {
 	line-height: 1.55;
 	margin: 10px auto 0;
 	max-width: 340px;
+}
+.featured {
+	display: block;
+	text-decoration: none;
+	color: #fff;
+	background: var(--accent);
+	border-radius: 16px;
+	padding: 18px 20px;
+	margin: 22px 0 4px;
+	text-align: left;
+	box-shadow: 0 8px 30px rgba(0, 0, 0, 0.22);
+	transition: 0.15s;
+}
+.featured:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 12px 34px rgba(0, 0, 0, 0.3);
+}
+.featured-title {
+	display: block;
+	font-weight: 700;
+	font-size: 1.1rem;
+	letter-spacing: -0.01em;
+}
+.featured-sub {
+	display: block;
+	color: rgba(255, 255, 255, 0.85);
+	font-size: 0.9rem;
+	line-height: 1.5;
+	margin-top: 6px;
+}
+.featured-cta {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-weight: 600;
+	font-size: 0.9rem;
+	margin-top: 12px;
 }
 .signup {
 	display: flex;

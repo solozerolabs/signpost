@@ -1,0 +1,18 @@
+---
+// Prominent above-the-fold CTA. Renders nothing when data/featured.yaml is
+// absent. data-passthrough opts the link into UTM forwarding (see Base.astro).
+import { featured } from "../lib/content";
+---
+
+{
+	featured && (
+		<a class="featured" href={featured.url} data-passthrough>
+			<span class="featured-title">{featured.title}</span>
+			{featured.sub && <span class="featured-sub">{featured.sub}</span>}
+			<span class="featured-cta">
+				{featured.cta}
+				<span aria-hidden="true">→</span>
+			</span>
+		</a>
+	)
+}

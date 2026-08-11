@@ -31,7 +31,12 @@ function clip(v: unknown, n: number): string | null {
 }
 
 // Durable fixed-window limiter in D1 (an in-memory Map is a no-op across isolates).
-async function allow(db: D1Database, key: string, limit: number, windowSec: number): Promise<boolean> {
+async function allow(
+	db: D1Database,
+	key: string,
+	limit: number,
+	windowSec: number,
+): Promise<boolean> {
 	const now = Math.floor(Date.now() / 1000);
 	const windowStart = now - (now % windowSec);
 	const row = await db
@@ -119,7 +124,13 @@ async function mirror(env: Env): Promise<void> {
 		`SELECT id, email, utm_source, referrer, created_at FROM subscribers
 		 WHERE mirrored_at IS NULL AND unsubscribed_at IS NULL AND suppressed_at IS NULL
 		 ORDER BY created_at LIMIT 100`,
-	).all<{ id: string; email: string; utm_source: string | null; referrer: string | null; created_at: string }>();
+	).all<{
+		id: string;
+		email: string;
+		utm_source: string | null;
+		referrer: string | null;
+		created_at: string;
+	}>();
 	if (!results?.length) return;
 
 	const subscribers = results.map((r) => ({

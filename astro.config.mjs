@@ -16,7 +16,7 @@ const { url: site } = load(readFileSync(join(dir, "profile.yaml"), "utf8"));
 const publicDir = existsSync("assets") ? "assets" : "assets.example";
 
 export default defineConfig({
-  site,
-  publicDir,
-  integrations: [sitemap()],
+	site,
+	publicDir,
+	integrations: [sitemap()],
 });
