@@ -17,6 +17,28 @@ interface Env {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// Short bio links: /<abbr> 302s to the homepage tagged with the platform as
+// utm_source, so a profile's website field can be a clean `hub.com/ig` yet still
+// attribute the click (the page's pass-through then forwards it downstream).
+const SHORT_LINKS: Record<string, string> = {
+	ig: "instagram",
+	tt: "tiktok",
+	li: "linkedin",
+	x: "twitter",
+	yt: "youtube",
+	gh: "github",
+};
+
+function shortLinkRedirect(url: URL): Response | null {
+	const source = SHORT_LINKS[url.pathname.slice(1).replace(/\/$/, "").toLowerCase()];
+	if (!source) return null;
+	const to = new URL("/", url);
+	to.searchParams.set("utm_source", source);
+	to.searchParams.set("utm_medium", "social");
+	to.searchParams.set("utm_campaign", "bio");
+	return Response.redirect(to.toString(), 302);
+}
+
 function json(status: number, body: unknown): Response {
 	return new Response(JSON.stringify(body), {
 		status,
@@ -160,6 +182,8 @@ export default {
 			if (request.method !== "POST") return json(405, { ok: false, error: "method_not_allowed" });
 			return handleSubscribe(request, env);
 		}
+		const short = shortLinkRedirect(url);
+		if (short) return short;
 		return env.ASSETS.fetch(request);
 	},
 
