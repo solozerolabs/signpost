@@ -3,7 +3,7 @@ import { aeo, profile, socials, theme } from "../lib/content";
 import "../styles/tokens.css";
 
 // Fallback attribution source for outbound clicks that arrive with no utm_* of
-// their own: this site's own registrable name (gosolozero.com -> "gosolozero").
+// their own: this site's own registrable name (e.g. example.com -> "example").
 const fallbackSource = new URL(profile.url).hostname.replace(/^www\./, "").split(".")[0];
 
 const jsonLd = {
