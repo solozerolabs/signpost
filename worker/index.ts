@@ -13,6 +13,9 @@ interface Env {
 	DB: D1Database;
 	MIRROR_WEBHOOK_URL?: string;
 	MIRROR_SECRET?: string;
+	// Optional: bind an Analytics Engine dataset to count homepage landings by
+	// utm_source (the channel). Unset = disabled. Query recipes in ANALYTICS.md.
+	LANDINGS?: AnalyticsEngineDataset;
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -190,6 +193,14 @@ export default {
 		}
 		const short = shortLinkRedirect(url);
 		if (short) return short;
+		// Count homepage landings by channel (utm_source) for drop-off analysis.
+		// One point per view of "/" — the short-link 302 lands here as ?utm_source=.
+		// No utm_* (typed the domain, unknown referrer) buckets as "direct".
+		// ponytail: counts bots/prefetches too — fine for relative channel comparison.
+		if (env.LANDINGS && request.method === "GET" && (url.pathname === "/" || url.pathname === "")) {
+			const source = url.searchParams.get("utm_source") || "direct";
+			env.LANDINGS.writeDataPoint({ blobs: [source], indexes: [source] });
+		}
 		return env.ASSETS.fetch(request);
 	},
 

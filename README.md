@@ -39,6 +39,13 @@ Static build to a single Cloudflare Worker with static-assets + a `/api/subscrib
 (D1-backed). `npm run build` → `wrangler deploy`. Custom domain is auto-provisioned via
 `routes[].custom_domain` in `wrangler.jsonc`.
 
+## Analytics
+
+Optional, zero-JS: the Worker counts homepage landings by channel (`utm_source`)
+into a Cloudflare Analytics Engine dataset. Combined with signups in D1, that's a
+conversion rate per channel — which social channel to invest in vs. which bounces.
+Enable/query: [`ANALYTICS.md`](ANALYTICS.md).
+
 ## Mirror to your newsletter
 
 Signups land in your D1. To flow them into your own newsletter engine / ESP, set

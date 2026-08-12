@@ -18,7 +18,9 @@
 		"directory": "./dist/",
 		"binding": "ASSETS",
 		"not_found_handling": "404-page",
-		"run_worker_first": ["/api/subscribe"]
+		// "/" runs the Worker first so it can log the landing before serving the
+		// static page (see LANDINGS binding below); the Worker still returns the asset.
+		"run_worker_first": ["/api/subscribe", "/"]
 	},
 	"routes": [{ "pattern": "YOURDOMAIN.com", "custom_domain": true }],
 	"d1_databases": [
@@ -29,5 +31,9 @@
 		}
 	],
 	"triggers": { "crons": ["0 * * * *"] },
+	// Optional: count homepage landings by channel (utm_source) for drop-off
+	// analysis. Remove this block to disable — the Worker no-ops without it.
+	// Query recipes: ANALYTICS.md.
+	"analytics_engine_datasets": [{ "binding": "LANDINGS", "dataset": "signpost_landings" }],
 	"vars": { "MIRROR_WEBHOOK_URL": "" }
 }
