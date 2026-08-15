@@ -1,11 +1,15 @@
 import { z } from "zod";
 
+const publicAssetPath = z
+	.string()
+	.regex(/^\/(?!\/)(?!.*(?:^|\/)\.\.(?:\/|$))[^?#]+$/, "must be a root-relative public asset path");
+
 export const profileSchema = z.object({
 	name: z.string(),
 	handle: z.string().optional(),
 	role: z.string().optional(),
 	bio: z.string().optional(),
-	avatar: z.string().default("/avatar.png"),
+	avatar: publicAssetPath.default("/avatar.png"),
 	url: z.string().url(),
 	email: z.string().email().optional(),
 	location: z.string().optional(),
@@ -44,6 +48,12 @@ export const featuredSchema = z.object({
 export const aeoSchema = z.object({
 	title: z.string(),
 	description: z.string(),
+	image: z.object({
+		src: publicAssetPath,
+		width: z.number().int().positive(),
+		height: z.number().int().positive(),
+		alt: z.string().min(1),
+	}),
 });
 
 export type Profile = z.infer<typeof profileSchema>;

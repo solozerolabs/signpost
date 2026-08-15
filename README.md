@@ -28,16 +28,22 @@ data/
   theme.yaml      # accent (#hex), color_scheme (auto|dark|light)
   socials.yaml    # list; multiple accounts per platform are fine
   products.yaml   # list of things you're building
-  aeo.yaml        # <title> + meta description
+  aeo.yaml        # <title>, description, and social-image metadata
 assets/
-  avatar.png      # your icon (copied into the build)
+  avatar.png      # your icon/social image (copied into the build)
 ```
+
+`profile.avatar` and `aeo.image.src` are root-relative paths into `assets/`. The
+build fails if either file is missing; `aeo.image` also declares the image's real
+width, height, and accessible alt text for Open Graph and Twitter metadata.
 
 ## Deploy
 
 Static build to a single Cloudflare Worker with static-assets + a `/api/subscribe` route
 (D1-backed). `npm run build` → `wrangler deploy`. Custom domain is auto-provisioned via
-`routes[].custom_domain` in `wrangler.jsonc`.
+`routes[].custom_domain` in `wrangler.jsonc`. Register both apex and `www` routes as shown
+in the example config; the Worker permanently redirects `www` to the apex while preserving
+the path and query string.
 
 ## Analytics
 

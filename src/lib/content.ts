@@ -40,7 +40,7 @@ function many<T>(file: string, schema: { parse: (v: unknown) => T }): T[] {
 		try {
 			return schema.parse(item);
 		} catch (e) {
-			fail(`${file}[${i}]`, e);
+			return fail(`${file}[${i}]`, e);
 		}
 	});
 }

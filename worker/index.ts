@@ -48,6 +48,13 @@ function shortLinkRedirect(url: URL): Response | null {
 	return Response.redirect(to.toString(), 302);
 }
 
+function canonicalHostRedirect(url: URL): Response | null {
+	if (!url.hostname.startsWith("www.")) return null;
+	const canonical = new URL(url);
+	canonical.hostname = url.hostname.slice(4);
+	return Response.redirect(canonical.toString(), 308);
+}
+
 function json(status: number, body: unknown): Response {
 	return new Response(JSON.stringify(body), {
 		status,
@@ -187,6 +194,8 @@ async function mirror(env: Env): Promise<void> {
 export default {
 	async fetch(request: Request, env: Env): Promise<Response> {
 		const url = new URL(request.url);
+		const canonical = canonicalHostRedirect(url);
+		if (canonical) return canonical;
 		if (url.pathname === "/api/subscribe") {
 			if (request.method !== "POST") return json(405, { ok: false, error: "method_not_allowed" });
 			return handleSubscribe(request, env);

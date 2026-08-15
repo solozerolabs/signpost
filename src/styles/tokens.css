@@ -3,7 +3,7 @@
 	--bg: #0b0b0c;
 	--surface: #141416;
 	--text: #f4f3f2;
-	--dim: rgba(244, 243, 242, 0.55);
+	--dim: rgba(244, 243, 242, 0.68);
 	--border: rgba(255, 255, 255, 0.1);
 }
 @media (prefers-color-scheme: light) {
@@ -11,7 +11,7 @@
 		--bg: #fbfaf9;
 		--surface: #fff;
 		--text: #17161a;
-		--dim: rgba(23, 22, 26, 0.55);
+		--dim: rgba(23, 22, 26, 0.68);
 		--border: rgba(0, 0, 0, 0.09);
 	}
 }
@@ -60,7 +60,7 @@ body {
 	margin-top: 2px;
 }
 .role {
-	color: var(--accent);
+	color: var(--text);
 	font-size: 0.72rem;
 	font-weight: 600;
 	letter-spacing: 0.14em;
@@ -77,7 +77,7 @@ body {
 .featured {
 	display: block;
 	text-decoration: none;
-	color: #fff;
+	color: var(--on-accent);
 	background: var(--accent);
 	border-radius: 16px;
 	padding: 18px 20px;
@@ -98,7 +98,7 @@ body {
 }
 .featured-sub {
 	display: block;
-	color: rgba(255, 255, 255, 0.85);
+	color: var(--on-accent);
 	font-size: 0.9rem;
 	line-height: 1.5;
 	margin-top: 6px;
@@ -124,14 +124,13 @@ body {
 	border-radius: 12px;
 	padding: 13px 15px;
 	font-size: 0.95rem;
-	outline: none;
 }
 .signup input::placeholder {
 	color: var(--dim);
 }
 .signup button {
 	background: var(--accent);
-	color: #fff;
+	color: var(--on-accent);
 	border: 0;
 	border-radius: 12px;
 	padding: 0 20px;
@@ -173,7 +172,7 @@ body {
 }
 .soc:hover {
 	border-color: var(--accent);
-	color: var(--accent);
+	color: var(--text);
 	transform: translateY(-2px);
 }
 .label {
@@ -207,9 +206,6 @@ body {
 	font-weight: 600;
 	font-size: 1rem;
 }
-.pill:hover .pill-main {
-	color: var(--accent);
-}
 .pill-sub {
 	color: var(--dim);
 	font-size: 0.85rem;
@@ -221,7 +217,7 @@ body {
 	font-size: 1rem;
 }
 .pill:hover .arrow {
-	color: var(--accent);
+	color: var(--text);
 }
 .foot {
 	color: var(--dim);
@@ -241,8 +237,14 @@ body {
 	margin-right: 6px;
 	vertical-align: middle;
 }
+:where(a, button, input):focus-visible {
+	outline: 3px solid var(--text);
+	outline-offset: 3px;
+}
 @media (prefers-reduced-motion: reduce) {
-	* {
-		transition: none !important;
+	.featured,
+	.soc,
+	.pill {
+		transition: none;
 	}
 }

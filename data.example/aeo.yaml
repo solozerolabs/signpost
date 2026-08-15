@@ -1,2 +1,7 @@
 title: "Alex Rivers - Indie Maker"
 description: "Building small software products in public."
+image:
+  src: /avatar.png
+  width: 440
+  height: 440
+  alt: "Portrait of Alex Rivers"

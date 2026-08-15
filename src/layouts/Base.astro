@@ -1,10 +1,14 @@
 ---
+import { readableForeground } from "../lib/color";
 import { aeo, profile, socials, theme } from "../lib/content";
 import "../styles/tokens.css";
 
 // Fallback attribution source for outbound clicks that arrive with no utm_* of
 // their own: this site's own registrable name (e.g. example.com -> "example").
 const fallbackSource = new URL(profile.url).hostname.replace(/^www\./, "").split(".")[0];
+const accentForeground = readableForeground(theme.accent);
+const ogImage = new URL(aeo.image.src, profile.url).toString();
+const twitterCard = aeo.image.width / aeo.image.height >= 1.5 ? "summary_large_image" : "summary";
 
 const jsonLd = {
 	"@context": "https://schema.org",
@@ -18,50 +22,46 @@ const forceScheme = theme.color_scheme === "auto" ? null : theme.color_scheme;
 ---
 
 <!doctype html>
-<html lang="en" style={`--accent:${theme.accent}`} data-scheme={forceScheme}>
+<html
+	lang="en"
+	style={`--accent:${theme.accent};--on-accent:${accentForeground}`}
+	data-scheme={forceScheme}
+	data-attribution-source={fallbackSource}
+>
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>{aeo.title}</title>
 		<meta name="description" content={aeo.description} />
-		<link rel="icon" href="/avatar.png" />
+		<link rel="icon" href={profile.avatar} />
 		<link rel="canonical" href={profile.url} />
 		<meta property="og:type" content="profile" />
 		<meta property="og:title" content={aeo.title} />
 		<meta property="og:description" content={aeo.description} />
 		<meta property="og:url" content={profile.url} />
-		<meta property="og:image" content="/og.png" />
-		<meta name="twitter:card" content="summary_large_image" />
+		<meta property="og:image" content={ogImage} />
+		<meta property="og:image:width" content={aeo.image.width.toString()} />
+		<meta property="og:image:height" content={aeo.image.height.toString()} />
+		<meta property="og:image:alt" content={aeo.image.alt} />
+		<meta name="twitter:card" content={twitterCard} />
+		<meta name="twitter:image" content={ogImage} />
+		<meta name="twitter:image:alt" content={aeo.image.alt} />
 		<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 	</head>
 	<body>
 		<main class="wrap"><slot /></main>
-		<script is:inline define:vars={{ fallbackSource }}>
-			// UTM pass-through: forward the visit's own utm_* onto every outbound
-			// [data-passthrough] link so the ORIGINAL source (e.g. linkedin) reaches
-			// the destination instead of this hub showing up as the referrer. No
-			// incoming utm_* -> tag the click with this hub as the source.
-			(function () {
-				var KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
-				var incoming = new URLSearchParams(location.search);
-				var carried = KEYS.filter(function (k) {
-					return incoming.get(k);
-				});
-				document.querySelectorAll("a[data-passthrough]").forEach(function (a) {
-					try {
-						var u = new URL(a.href, location.href);
-						if (carried.length) {
-							carried.forEach(function (k) {
-								u.searchParams.set(k, incoming.get(k));
-							});
-						} else {
-							u.searchParams.set("utm_source", fallbackSource);
-							u.searchParams.set("utm_medium", "referral");
-						}
-						a.href = u.toString();
-					} catch (e) {}
-				});
-			})();
+		<script>
+			import { withOutboundAttribution } from "../lib/attribution";
+
+			const incoming = new URL(location.href);
+			const fallbackSource = document.documentElement.dataset.attributionSource ?? "signpost";
+			document.querySelectorAll<HTMLAnchorElement>("a[data-passthrough]").forEach((anchor) => {
+				try {
+					anchor.href = withOutboundAttribution(anchor.href, incoming, fallbackSource);
+				} catch {
+					// Leave malformed links untouched.
+				}
+			});
 		</script>
 	</body>
 </html>

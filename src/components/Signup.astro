@@ -11,24 +11,30 @@ const consent = Astro.props.consent ?? "Weekly build log. No spam. Unsubscribe a
 </form>
 <p class="consent" data-consent aria-live="polite">{consent}</p>
 
-<script is:inline>
-	const form = document.querySelector("form[data-signup]");
+<script>
+	import { newsletterAttribution } from "../lib/attribution";
+
+	const form = document.querySelector<HTMLFormElement>("form[data-signup]");
 	const note = document.querySelector("[data-consent]");
 	form?.addEventListener("submit", async (e) => {
 		e.preventDefault();
-		const btn = form.querySelector("button");
+		const btn = form.querySelector<HTMLButtonElement>("button");
+		if (!btn) return;
 		btn.disabled = true;
 		try {
+			const payload = Object.assign(
+				Object.fromEntries(new FormData(form)),
+				newsletterAttribution(new URL(location.href), document.referrer),
+			);
 			const res = await fetch(form.action, {
 				method: "POST",
 				headers: { "content-type": "application/json" },
-				body: JSON.stringify(Object.fromEntries(new FormData(form))),
+				body: JSON.stringify(payload),
 			});
 			if (res.ok) {
 				form.style.display = "none";
 				if (note) {
 					note.textContent = "Thanks — you're on the list.";
-					note.style.color = "var(--accent)";
 				}
 			} else {
 				btn.disabled = false;

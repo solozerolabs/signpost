@@ -1,6 +1,16 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.5.0/schema.json",
+	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
 	"formatter": { "enabled": true, "indentStyle": "tab", "lineWidth": 100 },
-	"linter": { "enabled": true, "rules": { "recommended": true } },
-	"files": { "includes": ["**", "!dist", "!.astro", "!public"] }
+	"linter": { "enabled": true, "rules": { "preset": "recommended" } },
+	"files": { "includes": ["**", "!dist", "!.astro", "!public"] },
+	"overrides": [
+		{
+			"includes": ["**/*.astro"],
+			"linter": {
+				"rules": {
+					"correctness": { "noUnusedImports": "off", "noUnusedVariables": "off" }
+				}
+			}
+		}
+	]
 }

@@ -18,11 +18,14 @@
 		"directory": "./dist/",
 		"binding": "ASSETS",
 		"not_found_handling": "404-page",
-		// "/" runs the Worker first so it can log the landing before serving the
-		// static page (see LANDINGS binding below); the Worker still returns the asset.
-		"run_worker_first": ["/api/subscribe", "/"]
+		// Every request reaches the Worker first so www can permanently redirect to
+		// the apex before static assets; the Worker still delegates assets unchanged.
+		"run_worker_first": true
 	},
-	"routes": [{ "pattern": "YOURDOMAIN.com", "custom_domain": true }],
+	"routes": [
+		{ "pattern": "YOURDOMAIN.com", "custom_domain": true },
+		{ "pattern": "www.YOURDOMAIN.com", "custom_domain": true }
+	],
 	"d1_databases": [
 		{
 			"binding": "DB",
