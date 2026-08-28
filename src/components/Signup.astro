@@ -1,13 +1,18 @@
 ---
 // Posts to the signup Worker (/api/subscribe). Progressive enhancement: works as a
 // plain POST with no JS; with JS it submits in place and shows inline feedback.
+// title/sub are optional; cta/consent fall back to the bare-form defaults, so a
+// caller passing nothing (or an instance with no signup.yaml) is unchanged.
+const { title, sub, cta = "Join" } = Astro.props;
 const consent = Astro.props.consent ?? "Weekly build log. No spam. Unsubscribe anytime.";
 ---
 
+{title && <h2 class="signup-title">{title}</h2>}
+{sub && <p class="signup-offer">{sub}</p>}
 <form class="signup" method="post" action="/api/subscribe" data-signup>
 	<input type="email" name="email" placeholder="you@email.com" required aria-label="Email" />
 	<input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
-	<button type="submit">Join</button>
+	<button type="submit">{cta}</button>
 </form>
 <p class="consent" data-consent aria-live="polite">{consent}</p>
 

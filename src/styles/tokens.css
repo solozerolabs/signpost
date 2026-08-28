@@ -111,10 +111,27 @@ body {
 	font-size: 0.9rem;
 	margin-top: 12px;
 }
+.signup-title {
+	font-weight: 700;
+	font-size: 1.05rem;
+	letter-spacing: -0.01em;
+	margin: 22px 0 2px;
+}
+.signup-offer {
+	color: var(--dim);
+	font-size: 0.9rem;
+	line-height: 1.5;
+	margin: 0 0 4px;
+}
 .signup {
 	display: flex;
 	gap: 8px;
 	margin: 24px 0 6px;
+}
+/* When an offer or title precedes the form, tuck the form up under it. */
+.signup-offer + .signup,
+.signup-title + .signup {
+	margin-top: 10px;
 }
 .signup input[type="email"] {
 	flex: 1;

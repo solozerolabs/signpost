@@ -4,7 +4,7 @@ import LinkPill from "../components/LinkPill.astro";
 import Signup from "../components/Signup.astro";
 import SocialRow from "../components/SocialRow.astro";
 import Base from "../layouts/Base.astro";
-import { products, profile } from "../lib/content";
+import { products, profile, signup } from "../lib/content";
 ---
 
 <Base>
@@ -16,7 +16,7 @@ import { products, profile } from "../lib/content";
 
 	<Featured />
 
-	<Signup />
+	<Signup title={signup.title} sub={signup.sub} cta={signup.cta} consent={signup.consent} />
 	<SocialRow />
 
 	{products.length > 0 && <div class="label">Building</div>}
