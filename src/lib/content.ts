@@ -9,6 +9,7 @@ import {
 	featuredSchema,
 	productSchema,
 	profileSchema,
+	signupSchema,
 	socialSchema,
 	themeSchema,
 } from "./schema";
@@ -54,3 +55,7 @@ export const aeo = one("aeo.yaml", aeoSchema);
 export const featured = existsSync(join(ROOT, DATA, "featured.yaml"))
 	? one("featured.yaml", featuredSchema)
 	: null;
+// Optional: no signup.yaml -> schema defaults (a bare "Join" form), unchanged.
+export const signup = existsSync(join(ROOT, DATA, "signup.yaml"))
+	? one("signup.yaml", signupSchema)
+	: signupSchema.parse({});

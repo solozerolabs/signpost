@@ -45,6 +45,15 @@ export const featuredSchema = z.object({
 	url: z.string().url(),
 });
 
+// Optional signup copy (data/signup.yaml). Absent file -> a bare email form
+// with a "Join" button, i.e. every existing instance is unaffected.
+export const signupSchema = z.object({
+	title: z.string().optional(),
+	sub: z.string().optional(),
+	cta: z.string().default("Join"),
+	consent: z.string().default("Weekly build log. No spam. Unsubscribe anytime."),
+});
+
 export const aeoSchema = z.object({
 	title: z.string(),
 	description: z.string(),
@@ -60,3 +69,4 @@ export type Profile = z.infer<typeof profileSchema>;
 export type Social = z.infer<typeof socialSchema>;
 export type Product = z.infer<typeof productSchema>;
 export type Featured = z.infer<typeof featuredSchema>;
+export type Signup = z.infer<typeof signupSchema>;
